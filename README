@@ -1,0 +1,5 @@
+make all these files available under cgi-bin and access them through web browser
+http://localhost/cgi-bin/inventory.pl
+
+you'll need a mysql db called datacenter and a table called rwc
+with columns described in datacenter.mysql. assumes mysql root user has no passwd.

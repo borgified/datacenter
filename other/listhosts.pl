@@ -2,25 +2,21 @@
 
 use DBI;
 
-$number_of_jobs_to_run_in_parallel=3;
-
-my %running_jobs;
-my %results;
-
 my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
 	           ) || die "Could not connect to database: $DBI::errstr";
 
-#reset all the old ping results
-my $sth=$dbh->prepare('update rwc set ping = -1');
+$sth = $dbh->prepare('select distinct hostname,cab from rwc order by cab asc, (position+0) asc');
 $sth->execute();
 
-$sth = $dbh->prepare('select distinct hostname from rwc');
-$sth->execute();
+while (my($hostname,$cab)=$sth->fetchrow_array()){
 
-while (my $hostname=$sth->fetchrow_array()){
-	push(@hosts,$hostname);
+	#print "$hostname:$cab\n";
+	print "$hostname\n";
+
+
 }
 
+__END__
 my $number_of_hosts=@hosts;
 
 #keep looping until we run out of hosts
@@ -29,6 +25,7 @@ while ($number_of_hosts != 0){
 	#take one host out of the array (pop gets the last element of array)
 
 	$host=pop(@hosts);
+
 #since we're using pop instead of shift, the order of processing the array of hosts
 #will be in reverse order, dont use shift, its slower.
 

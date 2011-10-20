@@ -7,8 +7,50 @@ my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
 	           ) || die "Could not connect to database: $DBI::errstr";
 
 
-my $sth=$dbh->prepare('select id,hostname,asset_tag,make,model,serial_number,cab,position,dept,backup from rwc order by cab, (position+0) asc');
+#all this is to detect new additions of columns into the table, so it can be automatically displayed as an html table
+my $sth=$dbh->prepare('select column_name from information_schema.columns where table_name="rwc"');
+
 $sth->execute();
+
+my @columns;
+
+while(my $line=$sth->fetchrow_array()){
+	push (@columns,$line);
+}
+
+#these are the columns we know about and want to have displayed
+my @fixed_columns=qw/id hostname asset_tag make model serial_number cab position dept backup/;
+my @newcolumns;
+
+foreach my $item (@columns){
+	my $found=0;
+	foreach my $item2 (@fixed_columns){
+		if($item eq $item2){
+			$found=1;
+		}
+	}
+	if(!$found && $item ne 'timestamp'){
+#@newcolumns contain any new columns not previously accounted for
+		push(@newcolumns,$item);
+	}
+}
+
+
+#now we can construct a proper sql query based on columns we already know about, plus the ones we dont know about.
+
+my $sql_query="select id,hostname,asset_tag,make,model,serial_number,cab,position,dept,backup";
+
+my $sql_add="";
+foreach my $item (@newcolumns){
+	$sql_add=$sql_add.",$item";
+}
+my $sql_end=" from rwc order by cab, (position+0) asc";
+
+$sql_query=$sql_query.$sql_add.$sql_end;
+
+#column autodetect code complete
+
+$sth=$dbh->prepare($sql_query);
 
 print header;
 print <<EOF;
@@ -31,8 +73,17 @@ EOF
 
 
 print "<table border='1'>";
-print "<tr><th>X</th><th>U</th><th>I</th><th>hostname</th><th>asset_tag</th><th>make</th><th>model</th><th>serial_number</th><th>cab</th><th>position</th><th>dept</th><th>backup</th></tr>";
+my $htmlheader="<tr><th>X</th><th>U</th><th>I</th><th>hostname</th><th>asset_tag</th><th>make</th><th>model</th><th>serial_number</th><th>cab</th><th>position</th><th>dept</th><th>backup</th></tr>";
 
+
+
+foreach $item (@newcolumns){
+	$htmlheader=$htmlheader."<th>$item</th>";
+}
+$htmlheader=$htmlheader."</tr>";
+
+print $htmlheader;
+__END__
 my $currcab="";
 
 while(my @line=$sth->fetchrow_array()){

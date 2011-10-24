@@ -51,6 +51,7 @@ $sql_query=$sql_query.$sql_add.$sql_end;
 #column autodetect code complete
 
 $sth=$dbh->prepare($sql_query);
+$sth->execute();
 
 print header;
 print <<EOF;
@@ -73,9 +74,8 @@ EOF
 
 
 print "<table border='1'>";
-my $htmlheader="<tr><th>X</th><th>U</th><th>I</th><th>hostname</th><th>asset_tag</th><th>make</th><th>model</th><th>serial_number</th><th>cab</th><th>position</th><th>dept</th><th>backup</th></tr>";
 
-
+my $htmlheader="<tr><th>X</th><th>U</th><th>I</th><th>hostname</th><th>asset_tag</th><th>make</th><th>model</th><th>serial_number</th><th>cab</th><th>position</th><th>dept</th><th>backup</th>";
 
 foreach $item (@newcolumns){
 	$htmlheader=$htmlheader."<th>$item</th>";
@@ -83,16 +83,18 @@ foreach $item (@newcolumns){
 $htmlheader=$htmlheader."</tr>";
 
 print $htmlheader;
-__END__
+
 my $currcab="";
 
 while(my @line=$sth->fetchrow_array()){
 	my $id=shift(@line);
-	my($hostname,$asset_tag,$make,$model,$serial_number,$cab,$position,$dept,$backup)=@line;
+	my($hostname,$asset_tag,$make,$model,$serial_number,$cab,$position,$dept,$backup,$ping,$os)=@line;
+
+	my $sizeof_line=@line;
 
 	if($currcab ne $cab){
 print <<EOF;
-<tr><td></td><td></td><td></td><td colspan='9'><a href="inventory.pl?insert=$cab.$position"><hr style='margin:0'></a></td></tr>
+<tr><td></td><td></td><td></td><td colspan='$sizeof_line'><a href="inventory.pl?insert=$cab.$position"><hr style='margin:0'></a></td></tr>
 EOF
 	}
 
@@ -104,7 +106,12 @@ print <<EOF;
 <td><a href="insert_above.pl?position=$position&cab=$cab">&uarr;</a>&nbsp;<a href="insert_below.pl?position=$position&cab=$cab">&darr;</a></td>
 EOF
 	my $i=0;
-	my @inputname = qw/hostname asset_tag make model serial_number cab position dept backup/;
+#	my @inputname = qw/hostname asset_tag make model serial_number cab position dept backup ping os backup_size/;
+#the next 3 lines replaces the previous line but allows new columns to be created and automatically accounted for for updating
+	my @jc=(@fixed_columns, @newcolumns);
+	shift(@jc);
+	my @inputname=@jc;
+
 	foreach my $item (@line){
 		print "<td><input type='text' name='$inputname[$i].$id' value='$item'></td>";
 		$i++;

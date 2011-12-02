@@ -100,7 +100,7 @@ EOF
 
 
 print <<EOF;
-<tr><td><a href="delete.pl?id=$id&position=$position&cab=$cab" onclick="return confirm('confirm deletion of $hostname');">X</a></td>
+<tr title="$hostname"><td><a href="delete.pl?id=$id&position=$position&cab=$cab" onclick="return confirm('confirm deletion of $hostname');">X</a></td>
 <form name="form.$id" action="update.pl" method="post">
 <td><input type="submit" class="submitLink" value="U"></td>
 <td><a href="insert_above.pl?position=$position&cab=$cab">&uarr;</a>&nbsp;<a href="insert_below.pl?position=$position&cab=$cab">&darr;</a></td>

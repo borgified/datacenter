@@ -2,15 +2,28 @@
 
 use warnings;
 use strict;
-use CGI qw/:cgi/;
+use CGI qw/:standard/;
+use CGI::Session;
+use File::Spec;
 
 #http://www.perlmonks.org/?node=327902
 #http://search.cpan.org/~gbarr/perl-ldap-0.30/lib/Net/LDAP.pod
 use Net::LDAPS;
 use Net::LDAP;
 
+##### CGI SESSION
 
-my %config = do "$ENV{'HOME'}/scripts/secret/github_datacenter_other_webforms_login.pl";
+my $session = new CGI::Session("driver:File", undef, {Directory=>File::Spec->tmpdir});
+
+
+
+
+
+
+
+
+
+my %config = do "/secret/github_datacenter_other_webforms_login.pl";
 
 
 my $host 		= $config{'host'};
@@ -29,12 +42,15 @@ if(!defined $username or !defined $password){
 
 my $userdn = testGuid ($username, $password);
 
+
+print header,start_html;
 if ($userdn)
 {
     print "$userdn checks out!\n";
+}else{
+	print "wrong username/password combination\n";
 }
-
-
+print end_html;
 
 sub getUserDn
 {

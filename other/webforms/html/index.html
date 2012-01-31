@@ -14,8 +14,10 @@ The difference between a server owner and a user is the type of emails you might
 <tr><td></td><td></td><td></td></tr>
 <tr><td></td><td></td><td></td></tr>
 </table>
-<form action="login.pl">
-Login with windows username/password
+<form method="post" action="/cgi-bin/orphanage/login.pl">
+Login with your windows username/password<br>
 username: <input type="text" name="username">
-password: <input type="password" name="password">
+password: <input type="password" name="password"><br>
+<input type="submit" value="login">
+<input type="submit" value="logout" name="logout">
 </form> 

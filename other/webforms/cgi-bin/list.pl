@@ -5,7 +5,7 @@ use strict;
 use DBI;
 use CGI qw(:standard);
 
-my $my_cnf = '~/scripts/secret/my_cnf.cnf';
+my $my_cnf = '/secret/my_cnf.cnf';
 
 my $dbh = DBI->connect("DBI:mysql:"
     . ";mysql_read_default_file=$my_cnf"

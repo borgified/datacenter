@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 use CGI qw/:standard/;
-use CGI::Session;
+use CGI::Session qw/-ip-match/;
 use File::Spec;
 
 #http://www.perlmonks.org/?node=327902
@@ -13,14 +13,8 @@ use Net::LDAP;
 
 ##### CGI SESSION
 
-my $session = new CGI::Session("driver:File", undef, {Directory=>File::Spec->tmpdir});
-
-
-
-
-
-
-
+my $cgi		= new CGI;
+my $session = new CGI::Session("driver:File", $cgi, {Directory=>File::Spec->tmpdir});
 
 
 my %config = do "/secret/github_datacenter_other_webforms_login.pl";
@@ -35,22 +29,21 @@ my $searchBase 	= $config{'searchBase'};
 my $username 	= param('username');
 my $password	= param('password');
 
-if(!defined $username or !defined $password){
-	print "username/password not defined\n";
-	exit;
-}
-
 my $userdn = testGuid ($username, $password);
 
 
-print header,start_html;
 if ($userdn)
 {
-    print "$userdn checks out!\n";
+	#send cookie to user's browser
+	$session->param('username',$username);
+	my $cookie = $cgi->cookie(CGISESSID => $session->id);
+	print $cgi->header( -cookie=>$cookie, -location=>'list.pl');
+
 }else{
-	print "wrong username/password combination\n";
+
+	print $cgi->redirect(-location=>'index.pl?status=login_error');
+
 }
-print end_html;
 
 sub getUserDn
 {

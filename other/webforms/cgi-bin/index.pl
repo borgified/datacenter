@@ -1,3 +1,21 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use CGI qw/:standard/;
+
+
+my $cgi = new CGI;
+my $status = $cgi->param('status');
+
+if(!defined $status){
+	$status=" ";
+}else{
+	$status="bad username/password combo";
+}
+
+my $output = <<EOO
+
 <html>
 <h1>Welcome to the Server Orphanage</h1>
 
@@ -15,9 +33,17 @@ The difference between a server owner and a user is the type of emails you might
 <tr><td></td><td></td><td></td></tr>
 </table>
 <form method="post" action="/cgi-bin/orphanage/login.pl">
-Login with your windows username/password<br>
+Login with your windows username/password<p>
 username: <input type="text" name="username">
-password: <input type="password" name="password"><br>
+password: <input type="password" name="password"><p>
+$status<p>
 <input type="submit" value="login">
 <input type="submit" value="logout" name="logout">
-</form> 
+</form>
+
+EOO
+;
+
+
+print $cgi->header;
+print $output;

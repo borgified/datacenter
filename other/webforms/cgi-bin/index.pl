@@ -10,8 +10,10 @@ my $status = $cgi->param('status');
 
 if(!defined $status){
 	$status=" ";
-}else{
+}elsif($status eq 'login_error'){
 	$status="bad username/password combo";
+}elsif($status eq 'timeout'){
+	$status="session timed out, login again";
 }
 
 my $output = <<EOO

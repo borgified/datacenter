@@ -4,6 +4,8 @@ use warnings;
 use strict;
 use DBI;
 use CGI qw(:standard);
+use CGI::Session qw/-ip-match/;
+use File::Spec;
 
 my $my_cnf = '/secret/my_cnf.cnf';
 
@@ -29,9 +31,46 @@ while(my @results = $sth->fetchrow_array()){
 }
 
 
-print "the server orphanage";
+
+my $cgi = new CGI;
+
+my $sid = $cgi->cookie("CGISESSID") || undef;
+my $session = new CGI::Session(undef, $sid, {Directory=>File::Spec->tmpdir});
+	
+if($sid ne $session->id()){
+	$session->delete();
+	print $cgi->redirect(-location=>'index.pl?status=timeout');
+}
+
+my $owner = $session->param('username');
+chomp($owner);
+
+print $cgi->header,$cgi->start_html;
+print $cgi->h1("the server orphanage");
+
+print $cgi->h3("these are systems I own");
+print "<table>\n";
+
 foreach my $key (keys %data){
-	if($data{$key}{'owner'} eq ''){
-		print "$key CLAIM OWNERSHIP\n";
+	#print "$key : $data{$key}{'owner'} :: $owner<br>";
+	if($data{$key}{'owner'} eq $owner){
+		print "<tr><td>$key</td><td>$data{$key}{'backup'}</td><td>$data{$key}{'support_notes'}</td><td>$data{$key}{'os'}</td></tr>\n";
 	}
 }
+print "</table>\n";
+
+print "<hr>\n";
+
+print $cgi->h3("these are systems with no owner");
+print "<table>\n";
+foreach my $key (keys %data){
+	if($data{$key}{'owner'} eq ''){
+		print "<tr><td>$key</td><td>CLAIM OWNERSHIP</td></tr>\n";
+	}
+}
+print "</table>\n";
+
+
+
+
+print $cgi->end_html;

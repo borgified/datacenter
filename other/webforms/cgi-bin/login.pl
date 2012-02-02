@@ -14,8 +14,6 @@ use Net::LDAP;
 ##### CGI SESSION
 
 my $cgi		= new CGI;
-my $session = new CGI::Session("driver:File", $cgi, {Directory=>File::Spec->tmpdir});
-
 
 my %config = do "/secret/github_datacenter_other_webforms_login.pl";
 
@@ -34,6 +32,10 @@ my $userdn = testGuid ($username, $password);
 
 if ($userdn)
 {
+
+	my $session = new CGI::Session("driver:File", $cgi, {Directory=>File::Spec->tmpdir});
+	$session->expire('+1m'); #expire after 1 minute
+
 	#send cookie to user's browser
 	$session->param('username',$username);
 	my $cookie = $cgi->cookie(CGISESSID => $session->id);

@@ -34,7 +34,7 @@ if ($userdn)
 {
 
 	my $session = new CGI::Session("driver:File", $cgi, {Directory=>File::Spec->tmpdir});
-	$session->expire('+1m'); #expire after 1 minute
+	$session->expire('+30m'); #expire after 30 minutes
 
 	#send cookie to user's browser
 	$session->param('username',$username);

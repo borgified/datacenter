@@ -21,26 +21,18 @@ my $output = <<EOO
 <html>
 <h1>Welcome to the Server Orphanage</h1>
 
-Here you can claim ownership of a server or give yourself (and others) shared custody of servers (multiple owners).
-If you are not a server owner but a user, you may also register yourself as such.
-
-The difference between a server owner and a user is the type of emails you might get. (see table below)
-
-<table>
-<tr><th></th><th>owner</th><th>user</th></tr>
-<tr><td>downtime notification</td><td>yes</td><td>yes</td></tr>
-<tr><td>questions - maintenance contract</td><td>yes</td><td>no</td></tr>
-<tr><td>questions - backup related</td><td>yes</td><td>no</td></tr>
-<tr><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td></tr>
-</table>
+Here you can claim ownership of a server
+<p>
+Owning a server gets you:
+<li>email notification of hardware maintenance/downtimes
+<li>ability to determine whether a server needs to covered under a support contract
+<p>
 <form method="post" action="/cgi-bin/orphanage/login.pl">
 Login with your windows username/password<p>
 username: <input type="text" name="username">
 password: <input type="password" name="password"><p>
 $status<p>
 <input type="submit" value="login">
-<input type="submit" value="logout" name="logout">
 </form>
 
 EOO

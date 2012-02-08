@@ -39,17 +39,19 @@ my $dbh = DBI->connect("DBI:mysql:"
 
 
 my @claim_checked_servers = $cgi->param('claim');
-my $sth = $dbh->prepare('update rwc set owner=? where hostname=?');
+#my $sth = $dbh->prepare('update rwc set owner=? where hostname=?');
+my $sth = $dbh->prepare('update rwc set owner=concat_ws(\' \',owner, ?) where hostname=?');
 
 foreach my $server (@claim_checked_servers){
 	$sth->execute($owner,$server);
 }
 
 my @unclaim_checked_servers = $cgi->param('unclaim');
-$sth = $dbh->prepare('update rwc set owner=\'\' where hostname=?');
+#$sth = $dbh->prepare('update rwc set owner=\'\' where hostname=?');
+$sth = $dbh->prepare('update rwc set owner=replace(owner, ? ,\'\') where hostname=?');
 
 foreach my $server (@unclaim_checked_servers){
-	$sth->execute($server);
+	$sth->execute(" $owner",$server);
 }
 
 print $cgi->redirect(-location=>'list.pl');

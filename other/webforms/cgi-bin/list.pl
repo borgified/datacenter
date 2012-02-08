@@ -54,12 +54,12 @@ print "<input type=submit value='Submit changes'> as checked below\n";
 
 
 print $cgi->h3("these are systems I own");
-print "<table>\n";
-print "check to release ownership\n";
-print "<tr><th></th><th>hostname</th><th>backup</th><th>support_notes</th><td>os</td></tr>\n";
-foreach my $key (keys %data){
-	if($data{$key}{'owner'} eq $owner){
-		print "<tr><td><input type='checkbox' name='unclaim' value=$key></td><td>$key</td><td>$data{$key}{'backup'}</td><td>$data{$key}{'support_notes'}</td><td>$data{$key}{'os'}</td></tr>\n";
+print "<table border=1>\n";
+print "<font color=#FF0000>check to <b>release</b> ownership</font>\n";
+print "<tr><th></th><th>hostname</th><th>owner</th><th>backup</th><th>support_notes</th><td>os</td></tr>\n";
+foreach my $key (sort keys %data){
+	if($data{$key}{'owner'} =~ /\b$owner\b/){
+		print "<tr><td><input type='checkbox' name='unclaim' value=$key></td><td>$key</td><td>$data{$key}{'owner'}</td><td>$data{$key}{'backup'}</td><td>$data{$key}{'support_notes'}</td><td>$data{$key}{'os'}</td></tr>\n";
 	}
 }
 print "</table>\n";
@@ -67,7 +67,7 @@ print "</table>\n";
 print "<hr>\n";
 
 print $cgi->h3("these are systems with no owner");
-print "check to claim ownership\n";
+print "<font color=#FF0000>check to <b>claim</b> ownership</font>\n";
 print "<table>\n";
 print "<tr><th></th><th>hostname</th></tr>\n";
 foreach my $key (sort keys %data){
@@ -81,12 +81,12 @@ print "</table>\n";
 print "<hr>\n";
 
 print $cgi->h3("these are systems with at least one owner");
-print "check to add yourself as co-owner\n";
+print "<font color=#FF0000>check to add yourself as co-owner</font>\n";
 print "<table>\n";
 print "<tr><th></th><th>hostname</th><th>owner(s)</th></tr>\n";
 foreach my $key (sort keys %data){
-	if($data{$key}{'owner'} ne '' && $data{$key}{'owner'} ne $owner){
-		print "<tr><td><input type='checkbox' name='other' value=$key></td><td>$key</td><td>$data{$key}{'owner'}</td></tr>\n";
+	if($data{$key}{'owner'} ne '' && $data{$key}{'owner'} !~ /\b$owner\b/){
+		print "<tr><td><input type='checkbox' name='claim' value=$key></td><td>$key</td><td>$data{$key}{'owner'}</td></tr>\n";
 	}
 }
 print "</table>\n";

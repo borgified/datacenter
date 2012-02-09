@@ -20,7 +20,7 @@ my $sth = $dbh->prepare('select hostname,owner,backup,support_notes,os from rwc'
 
 $sth->execute();
 
-my @categories = qw/hostname owner backup support_notes os/;
+my @categories = qw/hostname owner backup support_notes os hw_maintenance sw_maintenance/;
 my %data;
 
 while(my @results = $sth->fetchrow_array()){
@@ -28,9 +28,9 @@ while(my @results = $sth->fetchrow_array()){
 		$data{$results[0]}{'backup'}=$results[2];
 		$data{$results[0]}{'support_notes'}=$results[3];
 		$data{$results[0]}{'os'}=$results[4];
+		$data{$results[0]}{'hw_maintenance'}=$results[5];
+		$data{$results[0]}{'sw_maintenance'}=$results[6];
 }
-
-
 
 my $cgi = new CGI;
 
@@ -46,6 +46,8 @@ if($sid ne $session->id()){
 my $owner = $session->param('username');
 chomp($owner);
 
+$session->param('data',\%data);
+
 print $cgi->header,$cgi->start_html;
 print $cgi->h1("the server orphanage");
 
@@ -54,8 +56,9 @@ print "<input type=submit value='Submit changes'> as checked below\n";
 
 
 print $cgi->h3("these are systems I own");
-print "<table border=1>\n";
+print "<a href='support.pl'>manage support contract</a><p>";
 print "<font color=#FF0000>check to <b>release</b> ownership</font>\n";
+print "<table border=1>\n";
 print "<tr><th></th><th>hostname</th><th>owner</th><th>backup</th><th>support_notes</th><td>os</td></tr>\n";
 foreach my $key (sort keys %data){
 	if($data{$key}{'owner'} =~ /\b$owner\b/){

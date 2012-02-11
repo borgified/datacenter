@@ -51,6 +51,8 @@ $session->param('data',\%data);
 print $cgi->header,$cgi->start_html;
 print $cgi->h1("the server orphanage");
 
+$session->param('task','list'); #this tells modifytable.pl what params to fetch and what sql to execute
+
 print "<form action='modifytable.pl' method=post>\n";
 print "<input type=submit value='Submit changes'> as checked below\n";
 

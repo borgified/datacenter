@@ -23,7 +23,10 @@ print $cgi->header,$cgi->start_html;
 my $owner = $session->param('username');
 my $data = $session->param('data');
 
+$session->param('task','support');
 
+print "<form method=post action='modifytable.pl'>\n";
+print "<input type=submit value='Submit changes'>\n";
 print "<table border=1>\n";
 print "<tr><th>hostname</th><th>hw_maintenance</th><th>sw_maintenance</th></tr>";
 foreach my $hostname (sort keys %{$data}){
@@ -46,8 +49,8 @@ foreach my $hostname (sort keys %{$data}){
 	}
 }
 print "</table>\n";
-
-
+print "<input type=submit value='Submit changes'>\n";
+print "</form>\n";
 
 print $cgi->end_html;
 

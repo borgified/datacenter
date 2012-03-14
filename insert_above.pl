@@ -5,9 +5,6 @@ use warnings;
 use CGI qw/:standard/;
 use DBI;
 
-#my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
-#	           ) || die "Could not connect to database: $DBI::errstr";
-
 my $my_cnf = '/secret/my_cnf.cnf';
 
 my $dbh = DBI->connect("DBI:mysql:"

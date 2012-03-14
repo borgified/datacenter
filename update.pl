@@ -41,10 +41,6 @@ foreach my $field (sort ($query->param)){
 
 $sql =~s/ , $/ where id = $id/;
 
-#my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
-#	           ) || die "Could not connect to database: $DBI::errstr";
-
-
 my $sth=$dbh->prepare($sql);
 $sth->execute();
 

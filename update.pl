@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 
 #asset_tag.66 : 652
@@ -10,8 +10,21 @@
 #position.66 : 1
 #serial_number.66 : 0629nnn01w
 
+use warnings;
+use strict;
 use CGI qw/:standard/;
 use DBI;
+
+
+my $my_cnf = '/secret/my_cnf.cnf';
+
+my $dbh = DBI->connect("DBI:mysql:"
+    . ";mysql_read_default_file=$my_cnf"
+    .';mysql_read_default_group=inventory',
+    undef, 
+    undef
+   ) or die "something went wrong ($DBI::errstr)";
+
 
 
 my $sql="update rwc set ";
@@ -28,8 +41,8 @@ foreach my $field (sort ($query->param)){
 
 $sql =~s/ , $/ where id = $id/;
 
-my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
-	           ) || die "Could not connect to database: $DBI::errstr";
+#my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
+#	           ) || die "Could not connect to database: $DBI::errstr";
 
 
 my $sth=$dbh->prepare($sql);

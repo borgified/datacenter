@@ -1,10 +1,22 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
+use strict;
+use warnings;
 use CGI qw/:standard/;
 use DBI;
 
-my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
-	           ) || die "Could not connect to database: $DBI::errstr";
+#my $dbh = DBI->connect('DBI:mysql:datacenter', 'root', ''
+#	           ) || die "Could not connect to database: $DBI::errstr";
+
+my $my_cnf = '/secret/my_cnf.cnf';
+
+my $dbh = DBI->connect("DBI:mysql:"
+    . ";mysql_read_default_file=$my_cnf"
+    .';mysql_read_default_group=inventory',
+    undef, 
+    undef
+   ) or die "something went wrong ($DBI::errstr)";
+
 
 my $position = param('position');
 my $cab = param('cab');

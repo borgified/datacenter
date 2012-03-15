@@ -17,6 +17,15 @@ my $cgi		= new CGI;
 
 my %config = do "/secret/github_datacenter_other_webforms_login.pl";
 
+#cat /secret/github_datacenter_other_webforms_login.pl
+#host		=> 'xxxxxxx:389',
+#ldaps 		=> '0',
+#adminDn 	=> 'CN=xxxxx,OU=xxxx,DC=xxxx,DC=xxxx',
+#adminPwd 	=> 'xxxx',
+#searchBase 	=> 'ou=xxxxxx,dc=xxxxx,dc=xxxx',
+
+
+
 
 my $host 		= $config{'host'};
 my $ldaps 		= $config{'ldaps'};

@@ -9,6 +9,15 @@ use File::Spec;
 
 my $my_cnf = '/secret/my_cnf.cnf';
 
+#cat /secret/my_cnf.cnf
+#[inventory]
+#host		= localhost
+#database	= datacenter
+#user		= xxxxxxx
+#password	= xxxxxxxxxxxx
+
+
+
 my $dbh = DBI->connect("DBI:mysql:"
     . ";mysql_read_default_file=$my_cnf"
     .';mysql_read_default_group=inventory',

@@ -27,7 +27,7 @@ Owning a server gets you:
 <li>email notification of hardware maintenance/downtimes
 <li>ability to determine whether a server needs to covered under a support contract
 <p>
-<form method="post" action="/cgi-bin/orphanage/login.pl">
+<form method="post" action="login.pl">
 Login with your windows username/password<p>
 username: <input type="text" name="username">
 password: <input type="password" name="password"><p>

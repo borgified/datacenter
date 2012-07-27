@@ -31,6 +31,8 @@ my $sql="update rwc set ";
 my $query = new CGI;
 
 print header,start_html;
+my $name;
+my $id;
 
 foreach my $field (sort ($query->param)){
 	foreach my $value ($query->param($field)){
